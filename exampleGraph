@@ -1,0 +1,10 @@
+t # 0
+v 0 C
+v 1 N
+v 2 C
+v 3 O
+v 4 N
+e 0 1 A
+e 1 2 A
+e 2 3 B
+e 2 4 A
