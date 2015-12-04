@@ -50,14 +50,16 @@ def putToIndex(path):
 def pathsOfLength(nodes, length):
     for i in nodes:
         node = nodes[i]
-        pathsOfLengthInner(node, length, node.properties, 1)
+        pathsOfLengthInner(node, length, node.properties, 1, {node.nodeNumber: True})
 
-def pathsOfLengthInner(node, maxLength, partialPath, currentLength):
+def pathsOfLengthInner(node, maxLength, partialPath, currentLength, visited):
     if currentLength == maxLength:
         putToIndex(partialPath)
         return
     for child in node.yieldChildren():
-        pathsOfLengthInner(child[0], maxLength, partialPath + child[1] + child[0].properties, currentLength + 1)
+        if child[0].nodeNumber not in visited:
+            visited[child[0].nodeNumber] = True
+            pathsOfLengthInner(child[0], maxLength, partialPath + child[1] + child[0].properties, currentLength + 1, visited)
 
 for i in range(1, 4):
     pathsOfLength(allNodes, i)
