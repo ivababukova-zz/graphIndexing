@@ -1,3 +1,7 @@
+package deprecated;
+
+import graph.Node;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,8 +13,8 @@ import java.util.HashMap;
 /**
  * Created by iva on 11/25/15.
  */
-public class Graph {
-    public static HashMap<String, Node> nodesMap;
+public class OldGraph {
+    public static HashMap<Integer, Node> nodesMap;
     public static ArrayList<String> index;
     public static HashMap<Node, Boolean> inPath = new HashMap<>();
 
@@ -78,7 +82,7 @@ public class Graph {
         while ((line = reader.readLine()) != null) {
             splittedline = line.split(" ");
             if (splittedline[0].equals("v")) {
-                String id = splittedline[1];
+                int id = Integer.parseInt(splittedline[1]);
                 String property = splittedline[2];
                 Node n = new Node(id, property);
                 nodesMap.put(id,n);
@@ -114,17 +118,12 @@ public class Graph {
 
         // for size from 1 to pathLen, generate paths of the graph
         for (int i = 1; i <= pathLen; i++) {
-            System.out.println("* in main *");
+            System.out.println("* in tools *");
             generatePath(allNodes, i);
         }
         System.out.println("****** index ******");
         for (String path : index) {
             System.out.println(path);
         }
-    }
-
-    public void search(Collection<Node> allNodes,
-                       int maxLen, HashMap<String, Node> searched) {
-
     }
 }

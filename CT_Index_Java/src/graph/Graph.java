@@ -8,15 +8,15 @@ import java.util.Iterator;
  * Created by iva on 12/4/15.
  */
 public class Graph {
-    private HashMap<String, Node> nodesMap;
-    private String id;
+    private HashMap<Integer, Node> nodesMap;
+    private int id;
 
-    public Graph(String id){
+    public Graph(int id){
         this.nodesMap = new HashMap<>();
         this.id = id;
     }
 
-    public String getId(){
+    public int getId(){
         return this.id;
     }
 
@@ -24,7 +24,7 @@ public class Graph {
         return this.nodesMap.values();
     }
 
-    public Iterator<String> getAllNodesIds(){
+    public Iterator<Integer> getAllNodesIds(){
         return this.nodesMap.keySet().iterator();
     }
 
@@ -32,7 +32,7 @@ public class Graph {
         this.nodesMap.put(n.id,n);
     }
 
-    public Node getNode(String id) {
+    public Node getNode(int id) {
         return this.nodesMap.get(id);
     }
 

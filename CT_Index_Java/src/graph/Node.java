@@ -8,10 +8,10 @@ import java.util.ArrayList;
 public class Node {
 
     public String property;
-    public String id;
+    public int id;
     public ArrayList<Edge> edges; // edge1Property, node1id, edge2property, node2id ...
 
-    public Node(String id, String property){
+    public Node(int id, String property){
         this.id = id;
         this.property = property;
         this.edges = new ArrayList<>();
