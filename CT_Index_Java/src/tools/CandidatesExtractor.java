@@ -1,9 +1,6 @@
 package tools;
 
-import graph.Graph;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by iva on 12/6/15.
@@ -27,17 +24,6 @@ public class CandidatesExtractor {
     public ArrayList<Integer> getCandidates(){
         return this.candidates;
     }
-/*
-    public void extractCandidates(){
-        targetsFeatures.keySet().forEach(
-                graphId -> {
-                    if (isCandidate(targetsFeatures.get(graphId))){
-                        candidates.add(graphId);
-                    }
-                }
-        );
-    }
-*/
     /* compare 1 target with the pattern and return true if the target is
      a candidate for subgraph isomorphism
     */
@@ -46,16 +32,16 @@ public class CandidatesExtractor {
         boolean contains = false;
         System.out.println("in isCandidate ...");
         for (String pfeature : patternFeatures) {
-            System.out.println("* current pattern feature: " + pfeature + "!!!!!!!!!!!");
+           // System.out.println("* current pattern feature: " + pfeature + "!!!!!!!!!!!");
             for (String tfeature : targetFeatures) {
-                System.out.println("** current target feature: " + tfeature);
+              //  System.out.println("** current target feature: " + tfeature);
                 if (tfeature.equals(pfeature)) {
-                    System.out.println("YES");
+              //      System.out.println("YES");
                     contains = true;
                     break;
                 }
                 else {
-                    System.out.println("NO");
+                //    System.out.println("NO");
                 }
             }
             // even if 1 feature from the pattern is not contained in the target,

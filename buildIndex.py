@@ -19,7 +19,7 @@ class Node:
         self.edges += [node1, edgeProperties]
         return self.getLength() - 1
 
-with open("exampleGraph") as g:
+with open("blehclique.txt") as g:
     for line in g:
         line = line.rstrip("\n")
         line = line.split(" ")
@@ -51,15 +51,16 @@ def pathsOfLength(nodes, length):
     for i in nodes:
         node = nodes[i]
         pathsOfLengthInner(node, length, node.properties, 1, {node.nodeNumber: True})
-
+import copy
 def pathsOfLengthInner(node, maxLength, partialPath, currentLength, visited):
     if currentLength == maxLength:
         putToIndex(partialPath)
         return
     for child in node.yieldChildren():
         if child[0].nodeNumber not in visited:
-            visited[child[0].nodeNumber] = True
-            pathsOfLengthInner(child[0], maxLength, partialPath + child[1] + child[0].properties, currentLength + 1, visited)
+            newVisited = copy.copy(visited)
+            newVisited[child[0].nodeNumber] = True
+            pathsOfLengthInner(child[0], maxLength, partialPath + child[1] + child[0].properties, currentLength + 1, newVisited)
 
 for i in range(1, 4):
     pathsOfLength(allNodes, i)

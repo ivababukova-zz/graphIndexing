@@ -4,7 +4,7 @@ import graph.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * Created by iva on 12/4/15.
@@ -12,12 +12,14 @@ import java.util.HashMap;
 public class PathExtractor {
 
     private ArrayList<String> index = new ArrayList<>();
-    private HashMap<Node, Boolean> inPath = new HashMap<>();
+    private Stack<Integer> stack = new Stack<>();
 
     public ArrayList<String> getIndex(){
         return this.index;
     }
 
+    /* put to the index the lexicographically smallest variant of the path,
+     * unless the path is already in the index */
     private void putToIndex(String path) {
         String reversed = new StringBuilder(path).reverse().toString();
         if (reversed.compareTo(path) < 0) {
@@ -36,43 +38,47 @@ public class PathExtractor {
     }
 
     public void generatePath(Collection<Node> nodes, int len) {
-        for (Node n : nodes) {
-            inPath.put(n, false);
-        }
+        //System.out.println("in generatePath ...");
+
         for(Node n : nodes) {
-            //System.out.println("- current node: " + n.property + " degree: " + n.edgeNumber());
-            resetInPath();
-            inPath.put(n,true);
-            generatePathInner(n, len, n.property, 1);
+           // System.out.println("- start node: " + n.property);
+            stack = new Stack<>();
+            stack.push(n.id);
+            generatePathInner(n, len, n.property, 1, 0);
         }
     }
 
     private void generatePathInner(Node node,
                                           int maxLen,
                                           String partialPath,
-                                          int currentLen){
-        //System.out.println("-- curr len: " + currentLen + " maxlen: " + maxLen + " curr node: " + node.id + " " + node.property);
+                                          int currentLen, int recursion){
+        String rec = "";
+        for (int i = 0; i < recursion; i++){
+            rec = rec + "-";
+        }
+       // System.out.println(rec + " curr len: " + currentLen + " max len: " + maxLen + " curr node: " + node.id);
         if (currentLen == maxLen) {
             putToIndex(partialPath);
-            //System.out.println("--* " + partialPath);
+          //  System.out.println(rec + " partial path: " + partialPath);
+            stack.pop();
             return;
         }
         ArrayList<Node> children = node.getOppositeNode();
-        for (Node child : children) {
-            //System.out.println("--+ " + child.id + " " + child.property);
-            if (inPath.get(child) == false) {
-                inPath.put(child,true);
+        for (Node child : children) { // 1, 2, 3
+            //System.out.print(rec + " child: " + child.id + " " + child.property);
+            if (stack.search(child.id) == -1) {
+              //  System.out.println(" NOT visited");
+                stack.push(child.id);
                 String partialPath2 = partialPath + node.getEdgeProperty(child) + child.property;
-                generatePathInner(child,maxLen,partialPath2,currentLen + 1);
+                int recursion2 = recursion + 2;
+                generatePathInner(child, maxLen, partialPath2, currentLen + 1, recursion2);
+            }
+            else{
+               // System.out.println(" visited");
+            }
+            if (stack.size() > 1) {
+                stack.pop();
             }
         }
     }
-
-    private void resetInPath(){
-        inPath.keySet().forEach( node1 -> {
-            inPath.put(node1,false);
-        });
-    }
-
-
 }
