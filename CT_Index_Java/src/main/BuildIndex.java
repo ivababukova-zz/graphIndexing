@@ -10,7 +10,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Created by iva on 12/4/15.
@@ -18,9 +17,9 @@ import java.util.Iterator;
 public class BuildIndex {
 
     public static HashMap<Integer,Graph> graphs;
-    public static Graph pattern;
+    public static HashMap<Integer,Graph> patterns;
     public static HashMap<Integer,ArrayList<String>> graphIndices;
-    public static ArrayList<String> patternIndices;
+    public static ArrayList<String> patternsIndices;
     public static String indexFileName;
     public static String patternFileName;
 
@@ -32,18 +31,22 @@ public class BuildIndex {
         while ((line = reader.readLine()) != null) {
             splittedline = line.split(" ");
             if(splittedline[0].equals("t")) {
-                if (isPattern) pattern = new Graph(Integer.parseInt(splittedline[2]));
+                graphID = Integer.parseInt(splittedline[2]);
+                Graph graph = new Graph(graphID);
+                if (isPattern) {
+                    patterns.put(graphID, graph);
+                }
                 else {
-                    Graph graph = new Graph(Integer.parseInt(splittedline[2]));
-                    graphs.put(Integer.parseInt(splittedline[2]), graph);
-                    graphID = Integer.parseInt(splittedline[2]);
+                    graphs.put(graphID, graph);
                 }
             }
             if (splittedline[0].equals("v")) {
                 int id = Integer.parseInt(splittedline[1]);
                 String property = splittedline[2];
                 Node n = new Node(id, property);
-                if (isPattern) pattern.put(n);
+                if (isPattern) {
+                    patterns.get(graphID).put(n);
+                }
                 else {
                     graphs.get(graphID).put(n);
                 }
@@ -52,8 +55,8 @@ public class BuildIndex {
                 Node srcNode;
                 Node dstNode;
                 if (isPattern) {
-                    srcNode = pattern.getNode(Integer.parseInt(splittedline[1]));
-                    dstNode = pattern.getNode(Integer.parseInt(splittedline[2]));
+                    srcNode = patterns.get(graphID).getNode(Integer.parseInt(splittedline[1]));
+                    dstNode = patterns.get(graphID).getNode(Integer.parseInt(splittedline[2]));
                 }
                 else {
                     srcNode = graphs.get(graphID).getNode(Integer.parseInt(splittedline[1])); // the first node id
@@ -89,7 +92,7 @@ public class BuildIndex {
         }
     }
 
-    public static void createIndex(int pathLen){
+    public static void createIndexTarget(int pathLen){
         Collection<Graph> allGraphs = graphs.values();
         PathExtractor extractor = new PathExtractor();
         for (Graph graph : allGraphs) {
@@ -103,10 +106,34 @@ public class BuildIndex {
         }
     }
 
+    public static void createIndexPatterns(int pathLen){
+        Collection<Graph> allGraphs = patterns.values();
+        PathExtractor extractor = new PathExtractor();
+        // System.out.println("*** index of patterns ***");
+        for (Graph graph : allGraphs) {
+            Collection<Node> allNodes = graph.getAllNodes();
+            // for size from 1 to pathLen, generate paths of the graph
+            for (int i = 1; i <= pathLen; i++) {
+                extractor.generatePath(allNodes, i);
+                for (String path : extractor.getIndex()) {
+                    putToPatternIndex(path);
+                }
+            }
+        }
+    }
+
+    public static void putToPatternIndex(String pattern) {
+        if (patternsIndices.contains(pattern)) return;
+        else{
+            System.out.println(pattern);
+            patternsIndices.add(pattern);
+        }
+    }
+
     public static void main(String[] args) throws Exception {
 
         if (args.length < 4) {
-            System.out.println("Usage: <filename> <path length> <index file name> <pattern file name>");
+            System.out.println("Usage: <filename> <path length> <index file name> <patterns file name>");
             System.exit(-1);
         }
         String filestr = args[0];
@@ -116,21 +143,21 @@ public class BuildIndex {
         patternFileName = args[3];
         graphs = new HashMap<>();
         graphIndices = new HashMap<>();
+        patterns = new HashMap<>();
+        patternsIndices = new ArrayList<>();
 
         parse(file,false);
-        //System.out.println("Database size: " + graphs.size());
+        System.out.println("Number of targets: " + graphs.size());
 
         Verify v = new Verify(graphs);
-        System.out.println("the size of graphs is correct: " + v.verifyGraphNumber(40000));
-        System.out.println("all graphs are parsed: " + v.verifyGraphIds(39999));
 
         /* verify whether the file with candidates contains the isomorphic graphs */
 /*
-        File f1 = new File("/home/iva/programming/graphIndexing/candidateIDs-AIDS-pattern.txt");
+        File f1 = new File("/home/iva/programming/graphIndexing/candidateIDs-AIDS-patterns.txt");
         File f2 = new File("/home/iva/University/4thYear/GraphXProject/CT-Index/subisosIDs.txt");
         System.out.println("file 2 is in file 1: " + v.isFile1inFile2(f1, f2));
 */
-        createIndex(pathLen);
+        createIndexTarget(pathLen);
         //printIndices();
 
         // write the extracted paths to the specified index filename
@@ -143,25 +170,15 @@ public class BuildIndex {
 
         // create a patternGraph
         file = new File(patternFileName);
-        parse(file,true); // parse the pattern
-        PathExtractor patternExtractor = new PathExtractor();
-        Collection<Node> allNodes = pattern.getAllNodes();
-        patternIndices = new ArrayList<>();
-        for (int i = 1; i <= pathLen; i++) {
-            patternExtractor.generatePath(allNodes,i);
-            patternIndices = patternExtractor.getIndex();
-        }
-        //System.out.println("*** pattern index ***");
-        for (String path : patternIndices) {
-           // System.out.println(path);
-        }
-        //System.out.println("***");
+        parse(file,true); // parse the patterns
+        createIndexPatterns(pathLen);
+
         CandidatesExtractor candidatesExtractor = new CandidatesExtractor();
 
         long l1 = System.currentTimeMillis();
         graphIndices.keySet().forEach(
                 graphId -> {
-                    if (candidatesExtractor.isCandidate(graphIndices.get(graphId), patternIndices)){
+                    if (candidatesExtractor.isCandidate(graphIndices.get(graphId), patternsIndices)){
                         //System.out.println("IT IS A CANDIDATE");
                         candidatesExtractor.addCandidate(graphId);
                     }
@@ -175,7 +192,7 @@ public class BuildIndex {
         long l3 = System.currentTimeMillis();
 
         // put the candidate graph ids in a file:
-        File outfile = new File("candidateIDs-AIDS-pattern.txt");
+        File outfile = new File("candidateIDs-AIDS-patterns.txt");
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(outfile), "utf-8"))) {
             for (Integer in : candidatesExtractor.getCandidates()) {

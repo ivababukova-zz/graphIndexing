@@ -24,15 +24,14 @@ public class CandidatesExtractor {
     public ArrayList<Integer> getCandidates(){
         return this.candidates;
     }
-    /* compare 1 target with the pattern and return true if the target is
+    /* compare 1 target with the patterns and return true if the target is
      a candidate for subgraph isomorphism
     */
     public boolean isCandidate(ArrayList<String> targetFeatures, ArrayList<String> patternFeatures){
         boolean candidate = true;
         boolean contains = false;
-        System.out.println("in isCandidate ...");
         for (String pfeature : patternFeatures) {
-           // System.out.println("* current pattern feature: " + pfeature + "!!!!!!!!!!!");
+           // System.out.println("* current patterns feature: " + pfeature + "!!!!!!!!!!!");
             for (String tfeature : targetFeatures) {
               //  System.out.println("** current target feature: " + tfeature);
                 if (tfeature.equals(pfeature)) {
@@ -44,7 +43,7 @@ public class CandidatesExtractor {
                 //    System.out.println("NO");
                 }
             }
-            // even if 1 feature from the pattern is not contained in the target,
+            // even if 1 feature from the patterns is not contained in the target,
             // the target is a candidate and we stop checking
             if (!contains) {
                 candidate = false;
