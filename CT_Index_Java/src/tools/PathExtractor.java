@@ -18,7 +18,7 @@ public class PathExtractor {
         return this.index;
     }
 
-    /* put to the index the lexicographically smallest variant of the path,
+    /* putNode to the index the lexicographically smallest variant of the path,
      * unless the path is already in the index */
     private void putToIndex(String path) {
         String reversed = new StringBuilder(path).reverse().toString();

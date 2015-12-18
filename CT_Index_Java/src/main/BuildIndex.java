@@ -3,9 +3,6 @@ package main;
 import graph.Graph;
 import graph.IsomerNode;
 import graph.Node;
-import tools.CandidatesExtractor;
-import tools.PathExtractor;
-import tools.Verify;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -33,6 +30,9 @@ public class BuildIndex {
             splittedline = line.split(" ");
             if(splittedline[0].equals("t")) {
                 graphID = Integer.parseInt(splittedline[2]);
+                if (!isPattern && graphID !=0) {
+                    createGraphIsomer(graphs.get(graphID - 1));
+                }
                 Graph graph = new Graph(graphID);
                 if (isPattern) {
                     patterns.put(graphID, graph);
@@ -46,10 +46,10 @@ public class BuildIndex {
                 String property = splittedline[2];
                 Node n = new Node(id, property);
                 if (isPattern) {
-                    patterns.get(graphID).put(n);
+                    patterns.get(graphID).putNode(n);
                 }
                 else {
-                    graphs.get(graphID).put(n);
+                    graphs.get(graphID).putNode(n);
                 }
             }
             if (splittedline[0].equals("e")) {
@@ -71,13 +71,13 @@ public class BuildIndex {
                 dstNode.addEdge(srcNode, splittedline[3]); // the property id
             }
         }
+        createGraphIsomer(graphs.get(graphID));
     }
 
-    public static void createGraphIsomer(){
-        for (Graph g : graphs.values()) {
-            for(Node n : g.getAllNodes()) {
-                IsomerNode inode = new IsomerNode(n);
-            }
+    private static void createGraphIsomer(Graph g){
+        for (Node n : g.getAllNodes()) {
+            IsomerNode in = new IsomerNode(n);
+            g.putINode(in);
         }
     }
 
@@ -110,7 +110,7 @@ public class BuildIndex {
             for (int i = 1; i <= pathLen; i++) {
                 //System.out.println("new pathLen: " + i);
                 extractor.generatePath(allNodes, i);
-                graphIndices.put(graph.getId(),extractor.getIndex());
+                graphIndices.putNode(graph.getId(),extractor.getIndex());
             }
         }
     }
@@ -157,7 +157,6 @@ public class BuildIndex {
 
         parse(file,false);
         System.out.println("Number of targets: " + graphs.size());
-        createGraphIsomer();
 /*
         createIndexTarget(pathLen);
         //printIndices();
@@ -193,7 +192,7 @@ public class BuildIndex {
         System.out.println("Printing candidates ...");
         long l3 = System.currentTimeMillis();
 
-        // put the candidate graph ids in a file:
+        // putNode the candidate graph ids in a file:
         File outfile = new File("candidateIDs-AIDS-patterns.txt");
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(outfile), "utf-8"))) {

@@ -10,9 +10,9 @@ public class IsomerNode{
     /**
      * This represents a label of an IsomerNode. The label is constructed
      * based on the labels of the neighbourhood of the Node whose IsomerNode
-     * is being created. The label is the lexicographcally smallest String of
+     * is being created. The label is the lexicographically smallest String of
      * label sequences of the neighbours of the Node. For example, if the input
-     * node is lbeleC and is has edges
+     * node is labeled as C and is has edges.
      *
      * */
     private String label;
@@ -66,7 +66,7 @@ public class IsomerNode{
         return 0;
     }
 
-    public void addEdge(INode node2, String edgeProp) {
+    public void addEdge(Node node2, String edgeProp) {
 
     }
 
@@ -74,12 +74,19 @@ public class IsomerNode{
         return null;
     }
 
-    public ArrayList<INode> getOppositeNodes() {
+    public ArrayList<Node> getOppositeNodes() {
         return null;
     }
 
-    public String getEdgeProperty(INode dstNode) {
+    public String getEdgeProperty(Node dstNode) {
         return null;
     }
 
+    public String label() {
+        return this.label;
+    }
+
+    public int id() {
+        return this.id;
+    }
 }
