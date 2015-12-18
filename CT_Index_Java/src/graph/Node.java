@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by iva on 11/25/15.
  */
-public class Node {
+public class Node{
 
     public String property;
     public int id;
@@ -30,7 +30,7 @@ public class Node {
         return this.edges.get(index);
     }
 
-    public ArrayList<Node> getOppositeNode() {
+    public ArrayList<Node> getOppositeNodes() {
         ArrayList<Node> opposites = new ArrayList<>();
         for (Edge e : this.edges) {
             Node child = e.dstNode();
@@ -47,4 +47,5 @@ public class Node {
         }
         return null;
     }
+
 }

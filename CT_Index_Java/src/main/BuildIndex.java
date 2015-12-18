@@ -1,6 +1,7 @@
 package main;
 
 import graph.Graph;
+import graph.IsomerNode;
 import graph.Node;
 import tools.CandidatesExtractor;
 import tools.PathExtractor;
@@ -72,6 +73,14 @@ public class BuildIndex {
         }
     }
 
+    public static void createGraphIsomer(){
+        for (Graph g : graphs.values()) {
+            for(Node n : g.getAllNodes()) {
+                IsomerNode inode = new IsomerNode(n);
+            }
+        }
+    }
+
     public static void printIndices(){
         Collection<Graph> graphsCollect = graphs.values();
         for (Graph g : graphsCollect) {
@@ -91,7 +100,7 @@ public class BuildIndex {
             }
         }
     }
-
+/*
     public static void createIndexTarget(int pathLen){
         Collection<Graph> allGraphs = graphs.values();
         PathExtractor extractor = new PathExtractor();
@@ -121,7 +130,7 @@ public class BuildIndex {
             }
         }
     }
-
+*/
     public static void putToPatternIndex(String pattern) {
         if (patternsIndices.contains(pattern)) return;
         else{
@@ -148,15 +157,8 @@ public class BuildIndex {
 
         parse(file,false);
         System.out.println("Number of targets: " + graphs.size());
-
-        Verify v = new Verify(graphs);
-
-        /* verify whether the file with candidates contains the isomorphic graphs */
+        createGraphIsomer();
 /*
-        File f1 = new File("/home/iva/programming/graphIndexing/candidateIDs-AIDS-patterns.txt");
-        File f2 = new File("/home/iva/University/4thYear/GraphXProject/CT-Index/subisosIDs.txt");
-        System.out.println("file 2 is in file 1: " + v.isFile1inFile2(f1, f2));
-*/
         createIndexTarget(pathLen);
         //printIndices();
 
@@ -207,5 +209,8 @@ public class BuildIndex {
         System.out.println();
         System.out.println("Computing CandidatesTime [s]: \t" + (l4/1000.0));
         System.out.println("Number of candidates: " + candidatesExtractor.getCandidates().size());
+
+
+        */
     }
 }

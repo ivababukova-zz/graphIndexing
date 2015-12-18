@@ -36,7 +36,7 @@ public class PathExtractor {
             index.add(path);
         }
     }
-
+/*
     public void generatePath(Collection<Node> nodes, int len) {
         //System.out.println("in generatePath ...");
 
@@ -63,7 +63,7 @@ public class PathExtractor {
             stack.pop();
             return;
         }
-        ArrayList<Node> children = node.getOppositeNode();
+        ArrayList<Node> children = node.getOppositeNodes();
         for (Node child : children) { // 1, 2, 3
             //System.out.print(rec + " child: " + child.id + " " + child.property);
             if (stack.search(child.id) == -1) {
@@ -81,4 +81,5 @@ public class PathExtractor {
             }
         }
     }
+    */
 }

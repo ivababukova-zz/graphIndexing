@@ -3,7 +3,7 @@ package graph;
 /**
  * Created by iva on 11/25/15.
  */
-public class Edge {
+public class Edge{
 
     private Node dstNode;
     private String properties;
