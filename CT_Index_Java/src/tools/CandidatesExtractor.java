@@ -31,16 +31,10 @@ public class CandidatesExtractor {
         boolean candidate = true;
         boolean contains = false;
         for (String pfeature : patternFeatures) {
-           // System.out.println("* current patterns feature: " + pfeature + "!!!!!!!!!!!");
             for (String tfeature : targetFeatures) {
-              //  System.out.println("** current target feature: " + tfeature);
                 if (tfeature.equals(pfeature)) {
-              //      System.out.println("YES");
                     contains = true;
                     break;
-                }
-                else {
-                //    System.out.println("NO");
                 }
             }
             // even if 1 feature from the patterns is not contained in the target,
