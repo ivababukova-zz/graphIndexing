@@ -23,7 +23,7 @@ public class SimpleNode {
         this.id = id;
         this.label = property;
         this.edges = new ArrayList<>();
-        this.isoLabel = property;
+        this.isoLabel = new String();
         this.visited = false;
     }
 
@@ -44,10 +44,16 @@ public class SimpleNode {
             SimpleNode dstNode = e.dstNode();
             addToLabel(dstNode.label());
         }
+        this.isoLabel = this.label + this.isoLabel;
     }
 
     /** find the place of c in the current label and add it */
     private void addToLabel(String c){
+        System.out.println("to add: " + c);
+        if (this.isoLabel.length() == 0) {
+            this.isoLabel += c;
+            return;
+        }
 
         if (this.isoLabel.length() == 1) {
             if (this.isoLabel.compareTo(c) < 0) {
@@ -58,7 +64,7 @@ public class SimpleNode {
             return;
         }
 
-        for (int i = 0; i < this.isoLabel.length() - 1; i++) {
+        for (int i = 0; i < this.isoLabel.length(); i++) {
             String s = this.isoLabel.substring(i, i + 1);
             if (c.compareTo(s) < 0) {
                 this.isoLabel = this.isoLabel.substring(0,i) + c + this.isoLabel.substring(i);

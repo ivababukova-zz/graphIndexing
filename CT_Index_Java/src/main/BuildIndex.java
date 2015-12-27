@@ -31,10 +31,10 @@ public class BuildIndex {
             splittedline = line.split(" ");
             if(splittedline[0].equals("t")) {
                 graphID = Integer.parseInt(splittedline[2]);
-                if (!isPattern && graphID !=0) {
+                if (!isPattern && graphID !=0 && labelOption == 1) {
                     createIsoLabels(graphs.get(graphID - 1));
                 }
-                if (isPattern && graphID !=0) {
+                if (isPattern && graphID !=0 && labelOption == 1) {
                     createIsoLabels(patterns.get(graphID - 1));
                 }
                 Graph graph = new Graph(graphID);
@@ -75,10 +75,10 @@ public class BuildIndex {
                 dstNode.addEdge(srcNode, splittedline[3]); // the property id
             }
         }
-        if(!isPattern && reader.readLine() == null) {
+        if(!isPattern && reader.readLine() == null && labelOption == 1) {
             createIsoLabels(graphs.get(graphID));
         }
-        if (isPattern && reader.readLine() == null) {
+        if (isPattern && reader.readLine() == null && labelOption == 1) {
             createIsoLabels(patterns.get(graphID));
         }
     }
@@ -104,7 +104,8 @@ public class BuildIndex {
     public static void writeToFile(Writer writer) throws IOException {
         Collection<Graph> graphsCollect = graphs.values();
         for (Graph g : graphsCollect) {
-                writer.write("****** index ****** " + g.getId() + "\n");
+                System.out.println(g.getId());
+                writer.write("t # " + g.getId() + "\n");
             for (String path : graphIndices.get(g.getId())){
                 writer.write(path + "\n");
             }
@@ -125,6 +126,7 @@ public class BuildIndex {
     }
 
     public static void createIndexPatterns(int pathLen){
+        System.out.println("pattern index:");
         Collection<Graph> allGraphs = patterns.values();
         PathExtractor extractor = new PathExtractor(labelOption);
         for (Graph graph : allGraphs) {
@@ -133,15 +135,27 @@ public class BuildIndex {
             for (int i = 1; i <= pathLen; i++) {
                 extractor.generatePath(allNodes, i);
                 for (String path : extractor.getIndex()) {
+                    //System.out.print(path);
                     putToPatternIndex(path);
                 }
             }
         }
+
+        for (String s : patternsIndices) {
+            System.out.println(s);
+        }
+        System.out.println("****");
+
     }
 
     public static void putToPatternIndex(String pattern) {
-        if (patternsIndices.contains(pattern)) return;
+
+        if (patternsIndices.contains(pattern)) {
+            //System.out.println(" Path is already in index");
+            return;
+        }
         else{
+            //System.out.println(" Path is NOT in index");
             patternsIndices.add(pattern);
         }
     }

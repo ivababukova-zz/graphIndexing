@@ -49,4 +49,14 @@ public class CandidatesExtractor {
         return candidate;
     }
 
+    /**
+     *
+     *
+     * */
+    private boolean contains(String targetPath, String patternPath) {
+        return false;
+    }
+
+
+
 }
