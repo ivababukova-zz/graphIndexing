@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Stack;
 
+
 /**
  * Created by iva on 12/4/15.
  */
@@ -16,7 +17,7 @@ public class PathExtractor {
 
     private int option;
 
-    private ArrayList<String> index = new ArrayList<>();
+    private ArrayList<Path> index = new ArrayList<>();
 
     /** this stack is used both for the path search and for checking visited nodes */
     private Stack<SimpleNode> stackPath = new Stack<>();
@@ -25,7 +26,7 @@ public class PathExtractor {
      * the same path over and over again*/
     private Stack<SimpleNode> globalStack = new Stack<>();
 
-    public ArrayList<String> getIndex(){
+    public ArrayList<Path> getIndex(){
         return this.index;
     }
 
@@ -50,19 +51,23 @@ public class PathExtractor {
         String reversedStr = toString(reversedArr);
         String pathStr = toString(arr);
 
+
         //System.out.println("*** partial path: " + pathStr);
         if (reversedStr.compareTo(pathStr) < 0) {
             pathStr = reversedStr;
+            arr = reversedArr;
         }
         boolean found = false;
-        for (String str : index) {
+        for (Path p : index) {
+            String str = p.toString(option);
             if (str.equals(pathStr)) {
                 found = true;
                 break;
             }
         }
         if (!found) {
-            index.add(pathStr);
+            Path path = new Path(arr);
+            index.add(path);
         }
     }
 

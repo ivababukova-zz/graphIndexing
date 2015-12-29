@@ -16,8 +16,8 @@ public class BuildIndex {
 
     public static HashMap<Integer,Graph> graphs;
     public static HashMap<Integer,Graph> patterns;
-    public static HashMap<Integer,ArrayList<String>> graphIndices;
-    public static ArrayList<String> patternsIndices;
+    public static HashMap<Integer,ArrayList<Path>> graphIndices;
+    public static ArrayList<Path> patternsIndices;
     public static String indexFileName;
     public static String patternFileName;
     public static int labelOption;
@@ -95,8 +95,8 @@ public class BuildIndex {
         Collection<Graph> graphsCollect = graphs.values();
         for (Graph g : graphsCollect) {
             System.out.println("****** index ****** " + g.getId());
-            for (String path : graphIndices.get(g.getId())){
-                System.out.println(path);
+            for (Path path : graphIndices.get(g.getId())){
+                System.out.println(path.toString(labelOption));
             }
         }
     }
@@ -106,8 +106,8 @@ public class BuildIndex {
         for (Graph g : graphsCollect) {
                 System.out.println(g.getId());
                 writer.write("t # " + g.getId() + "\n");
-            for (String path : graphIndices.get(g.getId())){
-                writer.write(path + "\n");
+            for (Path path : graphIndices.get(g.getId())){
+                writer.write(path.toString(labelOption) + "\n");
             }
         }
     }
@@ -134,21 +134,15 @@ public class BuildIndex {
             // for size from 1 to pathLen, generate paths of the graph
             for (int i = 1; i <= pathLen; i++) {
                 extractor.generatePath(allNodes, i);
-                for (String path : extractor.getIndex()) {
+                for (Path path : extractor.getIndex()) {
                     //System.out.print(path);
                     putToPatternIndex(path);
                 }
             }
         }
-
-        for (String s : patternsIndices) {
-            System.out.println(s);
-        }
-        System.out.println("****");
-
     }
 
-    public static void putToPatternIndex(String pattern) {
+    public static void putToPatternIndex(Path pattern) {
 
         if (patternsIndices.contains(pattern)) {
             //System.out.println(" Path is already in index");
@@ -207,7 +201,7 @@ public class BuildIndex {
         long l1 = System.currentTimeMillis();
         graphIndices.keySet().forEach(
                 graphId -> {
-                    if (candidatesExtractor.isCandidate(graphIndices.get(graphId), patternsIndices)){
+                    if (candidatesExtractor.isCandidate(graphIndices.get(graphId), patternsIndices, labelOption)){
                         //System.out.println("IT IS A CANDIDATE");
                         candidatesExtractor.addCandidate(graphId);
                     }

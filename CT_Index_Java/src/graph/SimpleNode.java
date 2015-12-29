@@ -47,9 +47,12 @@ public class SimpleNode {
         this.isoLabel = this.label + this.isoLabel;
     }
 
+    public void setIsoLabel(String isoLabel){
+        this.isoLabel = label + isoLabel;
+    }
+
     /** find the place of c in the current label and add it */
     private void addToLabel(String c){
-        System.out.println("to add: " + c);
         if (this.isoLabel.length() == 0) {
             this.isoLabel += c;
             return;
