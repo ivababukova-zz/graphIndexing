@@ -122,6 +122,7 @@ public class BuildIndex {
                 extractor.generatePath(allNodes, i);
                 graphIndices.put(graph.getId(), extractor.getIndex());
             }
+            extractor.clearIndex();
         }
     }
 
@@ -202,7 +203,7 @@ public class BuildIndex {
         graphIndices.keySet().forEach(
                 graphId -> {
                     if (candidatesExtractor.isCandidate(graphIndices.get(graphId), patternsIndices, labelOption)){
-                        //System.out.println("IT IS A CANDIDATE");
+                        System.out.println("IT IS A CANDIDATE " + graphId);
                         candidatesExtractor.addCandidate(graphId);
                     }
                 }
@@ -224,6 +225,11 @@ public class BuildIndex {
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
+
+        Verify verifier = new Verify();
+        File f1 = outfile;
+        File f2 = new File("/home/iva/University/4thYear/GraphXProject/CT-Index/subisosIDs.txt");
+        System.out.println("is file1 in file2: " + verifier.isFile1inFile2(f1, f2));
 
         long l4 = System.currentTimeMillis() - l3;
         System.out.println("done");

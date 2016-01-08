@@ -40,6 +40,10 @@ public class PathExtractor {
         this.edgeLabel = "-";
     }
 
+    public void clearIndex(){
+        this.index = new ArrayList<>();
+    }
+
     /** putNode to the index the lexicographically smallest variant of the path,
      * unless the path is already in the index
      * make the path to String before adding it to the index */

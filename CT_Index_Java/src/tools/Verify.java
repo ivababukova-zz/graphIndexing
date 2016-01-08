@@ -13,9 +13,9 @@ public class Verify {
 
     HashMap<Integer,Graph> graphs;
 
-    public Verify(HashMap<Integer,Graph> graphs) {
-        this.graphs = graphs;
-    }
+    //public Verify(HashMap<Integer,Graph> graphs) {
+       // this.graphs = graphs;
+    //}
 
     public boolean verifyGraphNumber(int expectedNumber){
         return expectedNumber == graphs.size();
