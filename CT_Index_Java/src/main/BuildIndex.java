@@ -126,7 +126,7 @@ public class BuildIndex {
     }
 
     public static void createIndexPatterns(int pathLen){
-        System.out.println("pattern index:");
+        System.out.println("****** pattern index:");
         Collection<Graph> allGraphs = patterns.values();
         PathExtractor extractor = new PathExtractor(labelOption);
         for (Graph graph : allGraphs) {
@@ -135,21 +135,21 @@ public class BuildIndex {
             for (int i = 1; i <= pathLen; i++) {
                 extractor.generatePath(allNodes, i);
                 for (Path path : extractor.getIndex()) {
-                    //System.out.print(path);
                     putToPatternIndex(path);
                 }
             }
         }
+        System.out.println("******");
     }
 
     public static void putToPatternIndex(Path pattern) {
-
         if (patternsIndices.contains(pattern)) {
             //System.out.println(" Path is already in index");
             return;
         }
         else{
             //System.out.println(" Path is NOT in index");
+            System.out.println(pattern.toString(labelOption));
             patternsIndices.add(pattern);
         }
     }

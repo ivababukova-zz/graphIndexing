@@ -45,28 +45,30 @@ public class PathExtractor {
      * make the path to String before adding it to the index */
     private void putToIndex(ArrayList<SimpleNode> stackArr) {
 
-        ArrayList<SimpleNode> arr = stackArr;
-        ArrayList<SimpleNode> reversedArr = stackArr;
-        reverse(reversedArr);
-        String reversedStr = toString(reversedArr);
-        String pathStr = toString(arr);
+        Path path = new Path(new ArrayList<>(stackArr), edgeLabel);
+        Path reversedPath = new Path(new ArrayList<>(stackArr),edgeLabel);
+        reversedPath.reverse();
 
+        String reversedStr = reversedPath.toString(option);
+        String pathStr = path.toString(option);
 
-        //System.out.println("*** partial path: " + pathStr);
-        if (reversedStr.compareTo(pathStr) < 0) {
-            pathStr = reversedStr;
-            arr = reversedArr;
+        //System.out.print("path: " + pathStr + " reversed: " + reversedStr);
+        //System.out.println( " " + pathStr.compareTo(reversedStr));
+
+        if (pathStr.compareTo(reversedStr) > 0) {
+            path.setNodes(reversedPath.getNodes());
+            pathStr = path.toString(option);
         }
         boolean found = false;
         for (Path p : index) {
-            String str = p.toString(option);
-            if (str.equals(pathStr)) {
+            if (p.toString(option).equals(pathStr)) {
                 found = true;
+         //       System.out.print(" *");
                 break;
             }
         }
+       // System.out.println(" " + found);
         if (!found) {
-            Path path = new Path(arr);
             index.add(path);
         }
     }
@@ -74,7 +76,7 @@ public class PathExtractor {
     public void generatePath(Collection<SimpleNode> nodes, int len) {
       //  System.out.println("in generatePath ...");
         globalStack = new Stack<>();
-        for(SimpleNode n : nodes) {
+        for(SimpleNode n : nodes) { // n is the current start node
           //  System.out.println("- start node: " + n.id());
             stackPath = new Stack<>();
             stackPath.push(n);
@@ -96,8 +98,7 @@ public class PathExtractor {
         }
        // System.out.println(rec + " curr L: " + stackPath.size() + " max L: " + maxLen + " curr node: " + node.id());
         if (stackPath.size() == maxLen) {
-            ArrayList<SimpleNode> arr = new ArrayList(stackPath);
-            putToIndex(arr);
+            putToIndex(new ArrayList(stackPath));
             stackPath.pop();
             return;
         }
@@ -144,6 +145,7 @@ public class PathExtractor {
      * if option == 1: make string using the isolabels of the nodes
      * if option == 2: make string using the ids of the nodes --- testing purposes
      * */
+    /*
     public String toString(ArrayList<SimpleNode> nodes){
         String path = "";
         for (SimpleNode n : nodes) {
@@ -158,9 +160,9 @@ public class PathExtractor {
         }
         return path;
     }
-
+*/
     /* reverse a given arraylist specified as parameter */
-    public void reverse(ArrayList<SimpleNode> nodes){
+    /*public void reverse(ArrayList<SimpleNode> nodes){
         Collections.reverse(nodes);
-    }
+    }*/
 }
