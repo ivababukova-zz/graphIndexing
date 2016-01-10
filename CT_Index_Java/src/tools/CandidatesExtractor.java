@@ -33,8 +33,6 @@ public class CandidatesExtractor {
      * in @patF is contained in @tarF
      * **/
     public boolean isCandidate(ArrayList<Path> tarF, ArrayList<Path> patF, int option){
-        if (tarF.size() < patF.size()) {return false;}
-
         for (Path pp : patF) {
             if (!contains(tarF, pp, option)){
                 return false;

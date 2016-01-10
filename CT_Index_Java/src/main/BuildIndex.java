@@ -196,14 +196,13 @@ public class BuildIndex {
         file = new File(patternFileName);
         parse(file,true); // parse the patterns
         createIndexPatterns(pathLen);
-
         CandidatesExtractor candidatesExtractor = new CandidatesExtractor();
 
         long l1 = System.currentTimeMillis();
         graphIndices.keySet().forEach(
                 graphId -> {
                     if (candidatesExtractor.isCandidate(graphIndices.get(graphId), patternsIndices, labelOption)){
-                        System.out.println("IT IS A CANDIDATE " + graphId);
+                        System.out.println("IT IS A CANDIDATE: " + graphId);
                         candidatesExtractor.addCandidate(graphId);
                     }
                 }
@@ -225,12 +224,12 @@ public class BuildIndex {
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
-
+/*
         Verify verifier = new Verify();
         File f1 = outfile;
         File f2 = new File("/home/iva/University/4thYear/GraphXProject/CT-Index/subisosIDs.txt");
         System.out.println("is file1 in file2: " + verifier.isFile1inFile2(f1, f2));
-
+*/
         long l4 = System.currentTimeMillis() - l3;
         System.out.println("done");
         System.out.println();
