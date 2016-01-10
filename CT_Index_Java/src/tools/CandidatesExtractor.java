@@ -1,6 +1,7 @@
 package tools;
 
 import graph.Graph;
+import graph.SimpleNode;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ public class CandidatesExtractor {
     public boolean isCandidate(ArrayList<Path> tarF, ArrayList<Path> patF, int option){
         for (Path pp : patF) {
             if (!contains(tarF, pp, option)){
+                //System.out.println(pp.toString(option) + " is not found");
                 return false;
             }
         }
@@ -57,20 +59,28 @@ public class CandidatesExtractor {
      * false: it doesn't contain
      * */
     private boolean containsPath(Path tp, Path pp, int option){
-
+        // System.out.print("tp: " + tp.toString(option) + " pp: " + pp.toString(option));
         // if the number of nodes in pp is more than in tp, they are not equal:
         if(tp.length() < pp.length()) {/*System.out.println(" false 1");*/return false;}
 
         // if the first label of tp is not the same of the first label in pp, they are not equal;
         if (!tp.toString(0).equals(pp.toString(0))) {
-            return false;}
-
+            //System.out.println(" false 2");
+            return false;
+        }
 
         for (int i = 0; i < tp.length(); i++) {
             if (!containsLabel(tp.getNodeLabel(i,option), pp.getNodeLabel(i, option))) {
-                return false;
+                //System.out.println(" false 3");
+                ArrayList<SimpleNode> reversedtpArr = new ArrayList<>(tp.getNodes());
+                Path reversedtp = new Path(reversedtpArr);
+                reversedtp.reverse();
+                if (!containsLabel(reversedtp.getNodeLabel(i,option), pp.getNodeLabel(i, option))){
+                    return false;
+                }
             }
         }
+        //System.out.println(" true");
         return true;
     }
 
