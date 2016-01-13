@@ -22,13 +22,6 @@ public class PathExtractor {
     /** this stack is used both for the path search and for checking visited nodes */
     private Stack<SimpleNode> stackPath = new Stack<>();
 
-    /** this keeps a record of previously explored paths so that we don't explore
-     * the same path over and over again */
-    /**
-     * this is not used anymore and should be removed, because it introduces a bug
-     * */
-    private Stack<SimpleNode> globalStack = new Stack<>();
-
     public ArrayList<Path> getIndex(){
         return this.index;
     }
@@ -59,7 +52,7 @@ public class PathExtractor {
         String reversedStr = reversedPath.toString(option);
         String pathStr = path.toString(option);
 
-        //System.out.print("path: " + pathStr + " reversed: " + reversedStr);
+        //System.out.println("*!* ");
         //System.out.println( " " + pathStr.compareTo(reversedStr));
 
         if (pathStr.compareTo(reversedStr) > 0) {
@@ -70,19 +63,17 @@ public class PathExtractor {
         for (Path p : index) {
             if (p.toString(option).equals(pathStr)) {
                 found = true;
-         //       System.out.print(" *");
                 break;
             }
         }
-       // System.out.println(" " + found);
         if (!found) {
-            //System.out.println(path.toString(option));
+            //System.out.print(path.toString(option) + "\n");
             index.add(path);
         }
     }
 
     public void generatePath(Collection<SimpleNode> nodes, int len) {
-      //  System.out.println("in generatePath ...");
+        //System.out.println("in generatePath ...");
         for(SimpleNode n : nodes) { // n is the current start node
             //System.out.println("- start node: " + n.id());
             stackPath = new Stack<>();
@@ -100,7 +91,7 @@ public class PathExtractor {
         /** rec is only for testing purposes */
         String rec = "";
         for (int i = 0; i < recursion; i++){
-            //rec = rec + "-";
+            rec = rec + "-";
         }
         //System.out.println(rec + " curr L: " + stackPath.size() + " max L: " + maxLen + " curr node: " + node.id());
         if (stackPath.size() == maxLen) {
@@ -117,10 +108,12 @@ public class PathExtractor {
                 int recursion2 = recursion + 2;
                 generatePathInner(child, maxLen, recursion2);
             }
+
             else{
-               // System.out.println(" visited");
+                //System.out.println(" visited");
                 child.visit();
             }
+
             // remove lastOnStack from the stackPath only after we are sure that
             // all children of lastOnStack are explored
             if (stackPath.size() > 1) {
@@ -133,12 +126,14 @@ public class PathExtractor {
                         removeFromStack = false;
                     }
                 }
+
                 if (removeFromStack) {
-                    //System.out.println(rec + " ALL visited, popping out from the stackPath");
-                    stackPath.peek().unvisit();
+                    //System.out.println(rec + " ALL visited, popping out from the stack: ");
                     stackPath.pop();
                     for (SimpleNode lsChild : lastOnStack.getOppositeNodes()) {
-                        lsChild.unvisit();
+                        //if (stackPath.search(lsChild) == -1) {
+                            lsChild.unvisit();
+                        //}
                     }
                     return;
                 }

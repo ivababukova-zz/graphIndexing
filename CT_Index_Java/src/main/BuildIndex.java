@@ -166,6 +166,7 @@ public class BuildIndex {
                     "where label option is: 0 for only labels, 1 for isoLabels, 2 for id instead of labels");
             System.exit(-1);
         }
+
         String filestr = args[0];
         int pathLen = new Integer(args[1]);
         File file = new File(filestr);
@@ -198,7 +199,7 @@ public class BuildIndex {
         createIndexPatterns(pathLen);
         CandidatesExtractor candidatesExtractor = new CandidatesExtractor();
 
-        long l1 = System.currentTimeMillis();
+        long l1 = System.nanoTime();
         graphIndices.keySet().forEach(
                 graphId -> {
                     if (candidatesExtractor.isCandidate(graphIndices.get(graphId), patternsIndices, labelOption)){
@@ -207,12 +208,11 @@ public class BuildIndex {
                     }
                 }
         );
-        long l2 = System.currentTimeMillis() - l1;
+        long l2 = System.nanoTime() - l1;
         System.out.println("done");
         System.out.println();
-        System.out.println("Index Build Time [s]: \t" + (l2 / 1000.0));
         System.out.println("Printing candidates ...");
-        long l3 = System.currentTimeMillis();
+        long l3 = System.nanoTime();
 
         // putNode the candidate graph ids in a file:
         File outfile = new File("candidates.txt");
@@ -230,10 +230,11 @@ public class BuildIndex {
         File f2 = new File("/home/iva/University/4thYear/GraphXProject/CT-Index/subisosIDs.txt");
         System.out.println("is file1 in file2: " + verifier.isFile1inFile2(f1, f2));
 
-        long l4 = System.currentTimeMillis() - l3;
+        long l4 = System.nanoTime() - l3;
         System.out.println("done");
         System.out.println();
-        System.out.println("Computing CandidatesTime [s]: \t" + (l4/1000.0));
+        System.out.println("Index Build Time [millisec]: " + (l2/1000000));
+        System.out.println("Computing CandidatesTime [millisec]: " + (l4/1000000));
         System.out.println("Number of candidates: " + candidatesExtractor.getCandidates().size());
 
 
