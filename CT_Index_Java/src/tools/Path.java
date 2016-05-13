@@ -60,7 +60,7 @@ public class Path {
         return this.nodes.get(i);
     }
 
-    public String getNodeLabel(int i, int option) {
+    public String label(int i, int option) {
         switch (option) {
             case 0: {return this.nodes.get(i).label();}
             case 1: {return this.nodes.get(i).isoLabel();}

@@ -11,16 +11,12 @@ public class CandidatesExtractor {
 
     private ArrayList<String> candidates; // arraylist of the ids of the graphs that are candiates
 
-    // todo pass features as files and here extract files
-    // todo it is not needed to have features as fields
     public CandidatesExtractor(){
         this.candidates = new ArrayList<>();
     }
-
     public void addCandidate(String graphId){
         this.candidates.add(graphId);
     }
-
     public ArrayList<String> getCandidates(){
         return this.candidates;
     }
@@ -41,7 +37,6 @@ public class CandidatesExtractor {
 
     private boolean contains(ArrayList<Path> tpaths, Path pp, int option) {
         for(Path tp : tpaths) {
-            //System.out.println("tp: " + tp.toString(option) + " pp: " + pp.toString(option));
             if (containsPath(tp,pp,option)) {
                 return true;
             }
@@ -55,23 +50,20 @@ public class CandidatesExtractor {
      * false: it doesn't contain
      * */
     private boolean containsPath(Path tp, Path pp, int option){
-        //System.out.print(tp.toString(option) + "  " + pp.toString(option));
         // if the number of nodes in pp is more than in tp, they are not equal:
-        if(tp.length() < pp.length()) {/*System.out.println(" fail 1");*/return false;}
+        if(tp.length() < pp.length()) {return false;}
 
         // if the first label of tp is not the same of the first label in pp, they are not equal;
-        if (!tp.toString(0).equals(pp.toString(0))) {/*System.out.println(" fail 2");*/return false;}
+        if (!tp.toString(0).equals(pp.toString(0))) {return false;}
 
         for (int i = 0; i < tp.length(); i++) {
-            if (!containsLabel(tp.getNodeLabel(i,option), pp.getNodeLabel(i, option))) {
+            if (!containsLabel(tp.label(i, option), pp.label(i, option))) {
                 ArrayList<Vertex> reversedtpArr = new ArrayList<>(tp.getNodes());
-                Path reversedtp = new Path(reversedtpArr);
+                Path reversedtp                 = new Path(reversedtpArr);
                 reversedtp.reverse();
-                if (!containsLabel(reversedtp.getNodeLabel(i,option),
-                                           pp.getNodeLabel(i, option))) {/*System.out.println(" fail 3");*/return false;}
+                if (!containsLabel(reversedtp.label(i, option), pp.label(i, option))) {return false;}
             }
         }
-        //System.out.println(" success");
         return true;
     }
 

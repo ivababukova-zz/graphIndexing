@@ -23,13 +23,13 @@ public class PathExtractor {
     }
 
     public PathExtractor(String edgeLabel, int option) {
-        this.option = option;
-        this.edgeLabel = edgeLabel;
+        this.option     = option;
+        this.edgeLabel  = edgeLabel;
     }
 
     public PathExtractor(int option) {
-        this.option = option;
-        this.edgeLabel = "-";
+        this.option     = option;
+        this.edgeLabel  = "-";
     }
 
     public void clearIndex(){
@@ -41,15 +41,11 @@ public class PathExtractor {
      * make the path to String before adding it to the index */
     private void putToIndex(ArrayList<Vertex> stackArr) {
 
-        Path path = new Path(new ArrayList<>(stackArr), edgeLabel);
-        Path reversedPath = new Path(new ArrayList<>(stackArr),edgeLabel);
+        Path path           = new Path(new ArrayList<>(stackArr), edgeLabel);
+        Path reversedPath   = new Path(new ArrayList<>(stackArr),edgeLabel);
         reversedPath.reverse();
-
-        String reversedStr = reversedPath.toString(option);
-        String pathStr = path.toString(option);
-
-        //System.out.println("*!* ");
-        //System.out.println( " " + pathStr.compareTo(reversedStr));
+        String reversedStr  = reversedPath.toString(option);
+        String pathStr      = path.toString(option);
 
         if (pathStr.compareTo(reversedStr) > 0) {
             path.setNodes(reversedPath.getNodes());
@@ -62,24 +58,20 @@ public class PathExtractor {
                 break;
             }
         }
-        if (!found) {
-            //System.out.print(path.toString(option) + "\n");
-            index.add(path);
-        }
+        if (!found) index.add(path);
     }
 
     public void generatePath(Collection<Vertex> vertex, int len) {
-        for(Vertex n : vertex) { // n is the current start node
+        for(Vertex v : vertex) { // v is the current start vertex
             stackPath = new Stack<>();
-            stackPath.push(n);
-            generatePathInner(n, len, 0);
+            stackPath.push(v);
+            generatePathInner(v, len);
             for (Vertex v1 : vertex) v1.unvisit();
         }
     }
 
-    private void generatePathInner(Vertex node, int maxL, int recursion) {
+    private void generatePathInner(Vertex node, int maxL) {
         node.visit();
-        //System.out.println("func call");
         if (stackPath.size() <= maxL) {
             putToIndex(new ArrayList<>(stackPath));
             if (stackPath.size() == maxL) {
@@ -93,7 +85,7 @@ public class PathExtractor {
             if (stackPath.search(child) == -1) {
                 stackPath.push(child);
                 allChildrenVisited = true;
-                generatePathInner(child,maxL,0);
+                generatePathInner(child,maxL);
             }
         }
         if (allChildrenVisited && stackPath.size() > 1) {
@@ -101,90 +93,4 @@ public class PathExtractor {
         }
         if (stackPath.size() == 0) return;
     }
-
-/*
-    private void generatePathInner(Vertex node,
-                                          int maxLen,
-                                          int recursion){
-        node.visit();
-        // rec is only for testing purposes
-        String rec = "";
-        for (int i = 0; i < recursion; i++){
-            rec = rec + "-";
-        }
-        //System.out.println(rec + " curr L: " + stackPath.size() + " max L: " + maxLen + " curr node: " + node.id());
-        if (stackPath.size() == maxLen) {
-            putToIndex(new ArrayList(stackPath));
-            stackPath.pop();
-            return;
-        }
-        ArrayList<Vertex> children = node.getNeighbors();
-        for (Vertex child : children) { // 1, 2, 3
-            //System.out.print(rec + " child: " + child.id() + " " + child.label());
-            if (stackPath.search(child) == -1 ) {
-                //System.out.println(" NOT visited");
-                stackPath.push(child);
-                int recursion2 = recursion + 2;
-                generatePathInner(child, maxLen, recursion2);
-            }
-
-            else{
-               // System.out.println(" visited");
-                child.visit();
-            }
-
-            // remove lastOnStack from the stackPath only after we are sure that
-            // all children of lastOnStack are explored
-            if (stackPath.size() > 1) {
-                boolean removeFromStack = true;
-                Vertex lastOnStack = stackPath.peek();
-               // System.out.println(rec + "* lastOnStack: " + lastOnStack.id());
-                for (Vertex lsChild : lastOnStack.getNeighbors()) {
-                    //System.out.println(rec + "** lsChild: " + lsChild.id() + " isVisited? " + lsChild.isVisited());
-                    if (!lsChild.isVisited() && (lsChild.id() != child.id())){
-                        removeFromStack = false;
-                    }
-                }
-
-                if (removeFromStack) {
-                   // System.out.println(rec + " ALL visited, popping out from the stack: ");
-                    stackPath.pop();
-                    for (Vertex lsChild : lastOnStack.getNeighbors()) {
-                        if (stackPath.search(lsChild) == -1) {
-                            lsChild.unvisit();
-                        }
-                    }
-                    return;
-                }
-            }
-        }
-    }
-*/
-    /** methods needed for the stack-path */
-
-    /*
-     * if option == 0: make string using the labels of the nodes
-     * if option == 1: make string using the isolabels of the nodes
-     * if option == 2: make string using the ids of the nodes --- testing purposes
-     * */
-    /*
-    public String toString(ArrayList<Vertex> nodes){
-        String path = "";
-        for (Vertex n : nodes) {
-            switch (this.option) {
-                case 0: {path = path + n.label(); break;}
-                case 1: {path = path + n.isoLabel(); break;}
-                case 2: {path = path + n.id(); break;}
-            }
-            if (nodes.indexOf(n) != (nodes.size()-1)) {
-                path = path + edgeLabel;
-            }
-        }
-        return path;
-    }
-*/
-    /* reverse a given arraylist specified as parameter */
-    /*public void reverse(ArrayList<Vertex> nodes){
-        Collections.reverse(nodes);
-    }*/
 }
