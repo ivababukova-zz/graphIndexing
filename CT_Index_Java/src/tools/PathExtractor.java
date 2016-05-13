@@ -1,10 +1,9 @@
 package tools;
 
-import graph.SimpleNode;
+import graph.Vertex;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Stack;
 
 
@@ -13,14 +12,11 @@ import java.util.Stack;
  */
 public class PathExtractor {
 
-    private String edgeLabel;
-
-    private int option;
-
+    private String          edgeLabel;
+    private int             option;
     private ArrayList<Path> index = new ArrayList<>();
+    private Stack<Vertex>   stackPath = new Stack<>(); // used both for the path search and for checking visited nodes
 
-    /** this stack is used both for the path search and for checking visited nodes */
-    private Stack<SimpleNode> stackPath = new Stack<>();
 
     public ArrayList<Path> getIndex(){
         return this.index;
@@ -43,7 +39,7 @@ public class PathExtractor {
     /** putNode to the index the lexicographically smallest variant of the path,
      * unless the path is already in the index
      * make the path to String before adding it to the index */
-    private void putToIndex(ArrayList<SimpleNode> stackArr) {
+    private void putToIndex(ArrayList<Vertex> stackArr) {
 
         Path path = new Path(new ArrayList<>(stackArr), edgeLabel);
         Path reversedPath = new Path(new ArrayList<>(stackArr),edgeLabel);
@@ -72,23 +68,46 @@ public class PathExtractor {
         }
     }
 
-    public void generatePath(Collection<SimpleNode> nodes, int len) {
-        //System.out.println("in generatePath ...");
-        for(SimpleNode n : nodes) { // n is the current start node
-            //System.out.println("- start node: " + n.id());
+    public void generatePath(Collection<Vertex> vertex, int len) {
+        for(Vertex n : vertex) { // n is the current start node
             stackPath = new Stack<>();
             stackPath.push(n);
             generatePathInner(n, len, 0);
-            for (SimpleNode n1 : nodes) n1.unvisit();
+            for (Vertex v1 : vertex) v1.unvisit();
         }
     }
 
+    private void generatePathInner(Vertex node, int maxL, int recursion) {
+        node.visit();
+        //System.out.println("func call");
+        if (stackPath.size() <= maxL) {
+            putToIndex(new ArrayList<>(stackPath));
+            if (stackPath.size() == maxL) {
+                stackPath.pop();
+                return;
+            }
+        }
+        ArrayList<Vertex> children = node.getNeighbors();
+        boolean allChildrenVisited = true;
+        for (Vertex child : children) {
+            if (stackPath.search(child) == -1) {
+                stackPath.push(child);
+                allChildrenVisited = true;
+                generatePathInner(child,maxL,0);
+            }
+        }
+        if (allChildrenVisited && stackPath.size() > 1) {
+            stackPath.pop();
+        }
+        if (stackPath.size() == 0) return;
+    }
 
-    private void generatePathInner(SimpleNode node,
+/*
+    private void generatePathInner(Vertex node,
                                           int maxLen,
                                           int recursion){
         node.visit();
-        /** rec is only for testing purposes */
+        // rec is only for testing purposes
         String rec = "";
         for (int i = 0; i < recursion; i++){
             rec = rec + "-";
@@ -99,8 +118,8 @@ public class PathExtractor {
             stackPath.pop();
             return;
         }
-        ArrayList<SimpleNode> children = node.getOppositeNodes();
-        for (SimpleNode child : children) { // 1, 2, 3
+        ArrayList<Vertex> children = node.getNeighbors();
+        for (Vertex child : children) { // 1, 2, 3
             //System.out.print(rec + " child: " + child.id() + " " + child.label());
             if (stackPath.search(child) == -1 ) {
                 //System.out.println(" NOT visited");
@@ -110,7 +129,7 @@ public class PathExtractor {
             }
 
             else{
-                //System.out.println(" visited");
+               // System.out.println(" visited");
                 child.visit();
             }
 
@@ -118,9 +137,9 @@ public class PathExtractor {
             // all children of lastOnStack are explored
             if (stackPath.size() > 1) {
                 boolean removeFromStack = true;
-                SimpleNode lastOnStack = stackPath.peek();
-                //System.out.println(rec + "* lastOnStack: " + lastOnStack.id());
-                for (SimpleNode lsChild : lastOnStack.getOppositeNodes()) {
+                Vertex lastOnStack = stackPath.peek();
+               // System.out.println(rec + "* lastOnStack: " + lastOnStack.id());
+                for (Vertex lsChild : lastOnStack.getNeighbors()) {
                     //System.out.println(rec + "** lsChild: " + lsChild.id() + " isVisited? " + lsChild.isVisited());
                     if (!lsChild.isVisited() && (lsChild.id() != child.id())){
                         removeFromStack = false;
@@ -128,19 +147,19 @@ public class PathExtractor {
                 }
 
                 if (removeFromStack) {
-                    //System.out.println(rec + " ALL visited, popping out from the stack: ");
+                   // System.out.println(rec + " ALL visited, popping out from the stack: ");
                     stackPath.pop();
-                    for (SimpleNode lsChild : lastOnStack.getOppositeNodes()) {
-                        //if (stackPath.search(lsChild) == -1) {
+                    for (Vertex lsChild : lastOnStack.getNeighbors()) {
+                        if (stackPath.search(lsChild) == -1) {
                             lsChild.unvisit();
-                        //}
+                        }
                     }
                     return;
                 }
             }
         }
     }
-
+*/
     /** methods needed for the stack-path */
 
     /*
@@ -149,9 +168,9 @@ public class PathExtractor {
      * if option == 2: make string using the ids of the nodes --- testing purposes
      * */
     /*
-    public String toString(ArrayList<SimpleNode> nodes){
+    public String toString(ArrayList<Vertex> nodes){
         String path = "";
-        for (SimpleNode n : nodes) {
+        for (Vertex n : nodes) {
             switch (this.option) {
                 case 0: {path = path + n.label(); break;}
                 case 1: {path = path + n.isoLabel(); break;}
@@ -165,7 +184,7 @@ public class PathExtractor {
     }
 */
     /* reverse a given arraylist specified as parameter */
-    /*public void reverse(ArrayList<SimpleNode> nodes){
+    /*public void reverse(ArrayList<Vertex> nodes){
         Collections.reverse(nodes);
     }*/
 }

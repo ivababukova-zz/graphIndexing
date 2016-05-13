@@ -5,15 +5,15 @@ package graph;
  */
 public class Edge{
 
-    private SimpleNode dstNode;
+    private Vertex dstNode;
     private String properties;
 
-    public Edge(SimpleNode node2, String properties){
+    public Edge(Vertex node2, String properties){
         this.dstNode = node2;
         this.properties = properties;
     }
 
-    public SimpleNode dstNode(){
+    public Vertex dstNode(){
         return this.dstNode;
     }
 

@@ -1,3 +1,10 @@
 .idea/
 ../out/*
 ../CT_Index_Java.iml
+.class
+CT_Index_Java/*.iml
+CT_Index_Java/out/*
+answers/*
+blehclique.txt
+graphs/*
+candidateIDs-AIDS-pattern.txt

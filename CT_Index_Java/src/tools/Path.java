@@ -1,6 +1,6 @@
 package tools;
 
-import graph.SimpleNode;
+import graph.Vertex;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,14 +10,14 @@ import java.util.Collections;
  */
 public class Path {
 
-    //private SimpleNode[] nodes;
+    //private Vertex[] nodes;
     private String edgeLabel;
-    private ArrayList<SimpleNode> nodes;
+    private ArrayList<Vertex> nodes;
 
 
-    public Path(ArrayList<SimpleNode> nodes) {
+    public Path(ArrayList<Vertex> nodes) {
         /*
-        this.nodes = new SimpleNode[nodes.size()];
+        this.nodes = new Vertex[nodes.size()];
         for (int i = 0; i < nodes.size(); i++) {
             this.nodes[i] = nodes.get(i);
         }
@@ -26,9 +26,9 @@ public class Path {
         this.edgeLabel = "-"; // default edge label
     }
 
-    public Path(ArrayList<SimpleNode> nodes, String edgeLabel) {
+    public Path(ArrayList<Vertex> nodes, String edgeLabel) {
         /*
-        this.nodes = new SimpleNode[nodes.size()];
+        this.nodes = new Vertex[nodes.size()];
         for (int i = 0; i < nodes.size(); i++) {
             this.nodes[i] = nodes.get(i);
         }
@@ -56,7 +56,7 @@ public class Path {
         return path;
     }
 
-    public SimpleNode getNode(int i) {
+    public Vertex getNode(int i) {
         return this.nodes.get(i);
     }
 
@@ -72,11 +72,11 @@ public class Path {
         Collections.reverse(nodes);
     }
 
-    public void setNodes(ArrayList<SimpleNode> newNodes) {
+    public void setNodes(ArrayList<Vertex> newNodes) {
         this.nodes = newNodes;
     }
 
-    public ArrayList<SimpleNode> getNodes() {
+    public ArrayList<Vertex> getNodes() {
         return this.nodes;
     }
 }

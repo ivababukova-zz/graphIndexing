@@ -1,7 +1,6 @@
 package tools;
 
-import graph.Graph;
-import graph.SimpleNode;
+import graph.Vertex;
 
 import java.util.ArrayList;
 
@@ -10,9 +9,7 @@ import java.util.ArrayList;
  */
 public class CandidatesExtractor {
 
-   // private ArrayList<String> patternFeatures; // all features of the small query graph
-   // private HashMap<String, ArrayList<String>> targetsFeatures; // map of graphid : feature for each graph
-    private ArrayList<Integer> candidates; // arraylist of the ids of the graphs that are candiates
+    private ArrayList<String> candidates; // arraylist of the ids of the graphs that are candiates
 
     // todo pass features as files and here extract files
     // todo it is not needed to have features as fields
@@ -20,11 +17,11 @@ public class CandidatesExtractor {
         this.candidates = new ArrayList<>();
     }
 
-    public void addCandidate(int graphId){
+    public void addCandidate(String graphId){
         this.candidates.add(graphId);
     }
 
-    public ArrayList<Integer> getCandidates(){
+    public ArrayList<String> getCandidates(){
         return this.candidates;
     }
 
@@ -36,7 +33,6 @@ public class CandidatesExtractor {
     public boolean isCandidate(ArrayList<Path> tarF, ArrayList<Path> patF, int option){
         for (Path pp : patF) {
             if (!contains(tarF, pp, option)){
-                //System.out.println(pp.toString(option) + " is not found");
                 return false;
             }
         }
@@ -44,8 +40,8 @@ public class CandidatesExtractor {
     }
 
     private boolean contains(ArrayList<Path> tpaths, Path pp, int option) {
-
         for(Path tp : tpaths) {
+            //System.out.println("tp: " + tp.toString(option) + " pp: " + pp.toString(option));
             if (containsPath(tp,pp,option)) {
                 return true;
             }
@@ -59,28 +55,23 @@ public class CandidatesExtractor {
      * false: it doesn't contain
      * */
     private boolean containsPath(Path tp, Path pp, int option){
-        // System.out.print("tp: " + tp.toString(option) + " pp: " + pp.toString(option));
+        //System.out.print(tp.toString(option) + "  " + pp.toString(option));
         // if the number of nodes in pp is more than in tp, they are not equal:
-        if(tp.length() < pp.length()) {/*System.out.println(" false 1");*/return false;}
+        if(tp.length() < pp.length()) {/*System.out.println(" fail 1");*/return false;}
 
         // if the first label of tp is not the same of the first label in pp, they are not equal;
-        if (!tp.toString(0).equals(pp.toString(0))) {
-            //System.out.println(" false 2");
-            return false;
-        }
+        if (!tp.toString(0).equals(pp.toString(0))) {/*System.out.println(" fail 2");*/return false;}
 
         for (int i = 0; i < tp.length(); i++) {
             if (!containsLabel(tp.getNodeLabel(i,option), pp.getNodeLabel(i, option))) {
-                //System.out.println(" false 3");
-                ArrayList<SimpleNode> reversedtpArr = new ArrayList<>(tp.getNodes());
+                ArrayList<Vertex> reversedtpArr = new ArrayList<>(tp.getNodes());
                 Path reversedtp = new Path(reversedtpArr);
                 reversedtp.reverse();
-                if (!containsLabel(reversedtp.getNodeLabel(i,option), pp.getNodeLabel(i, option))){
-                    return false;
-                }
+                if (!containsLabel(reversedtp.getNodeLabel(i,option),
+                                           pp.getNodeLabel(i, option))) {/*System.out.println(" fail 3");*/return false;}
             }
         }
-        //System.out.println(" true");
+        //System.out.println(" success");
         return true;
     }
 
