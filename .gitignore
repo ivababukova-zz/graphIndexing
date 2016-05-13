@@ -8,3 +8,8 @@ answers/*
 blehclique.txt
 graphs/*
 candidateIDs-AIDS-pattern.txt
+statistics/*
+CT_Index_Java/candidates.txt
+CT_Index_Java/candidateIDs.txt
+CT_Index_Java/candidateIDs-AIDS-patterns.txt
+

@@ -1,6 +1,6 @@
 package tests;
 
-import graph.SimpleNode;
+import graph.Vertex;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,12 +17,12 @@ public class CandidatesExtractorTest {
     private CandidatesExtractor candidatesExtractor;
 
     private Path generatePath(ArrayList<String> labels, String edgeLabel) {
-        ArrayList<SimpleNode> nodes = new ArrayList<>();
-        SimpleNode n;
+        ArrayList<Vertex> nodes = new ArrayList<>();
+        Vertex n;
         int pathLen = labels.size();
         for (int i = 0; i < pathLen; i++) {
-            n = new SimpleNode(i, labels.get(i).substring(0,1));
-            n.setIsoLabel(labels.get(i).substring(1));
+            n = new Vertex(i, labels.get(i).substring(0,1));
+            //n.setNlabel(labels.get(i).substring(1));
             nodes.add(i,n);
         }
         Path path = new Path(nodes,edgeLabel);

@@ -1,8 +1,7 @@
 package tests;
 
 import graph.Graph;
-import graph.SimpleNode;
-import org.junit.Assert;
+import graph.Vertex;
 import org.junit.Test;
 import tools.Path;
 import tools.PathExtractor;
@@ -24,23 +23,24 @@ public class PathExtractorTest {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = null;
         String[] splittedline = null;
-        int graphID = 0;
+        String graphID = "0";
         Graph graph = null;
+        /*
         while ((line = reader.readLine()) != null) {
             splittedline = line.split(" ");
             if(splittedline[0].equals("t")) {
-                graphID = Integer.parseInt(splittedline[2]);
+                graphID = splittedline[2];
                 graph = new Graph(graphID);
             }
             if (splittedline[0].equals("v")) {
                 int id = Integer.parseInt(splittedline[1]);
                 String property = splittedline[2];
-                SimpleNode n = new SimpleNode(id, property);
+                Vertex n = new Vertex(id, property);
                 graph.putNode(n);
             }
             if (splittedline[0].equals("e")) {
-                SimpleNode srcNode = graph.getNode(Integer.parseInt(splittedline[1])); // the first node id
-                SimpleNode dstNode = graph.getNode(Integer.parseInt(splittedline[2])); // the second node id
+                Vertex srcNode = graph.getNode(Integer.parseInt(splittedline[1])); // the first node id
+                Vertex dstNode = graph.getNode(Integer.parseInt(splittedline[2])); // the second node id
                 if (srcNode == null || dstNode == null) {
                     throw new Exception("Can't create new edge, source " +
                             "or destination node does not exist");
@@ -48,7 +48,7 @@ public class PathExtractorTest {
                 srcNode.addEdge(dstNode, splittedline[3]); // the property id
                 dstNode.addEdge(srcNode, splittedline[3]); // the property id
             }
-        }
+        }*/
         if (labelOption == 1) {
             createIsoLabels(graph);
         }
@@ -58,8 +58,8 @@ public class PathExtractorTest {
     /** whenever I am sure that the graph is constructed, create the isomer label
      * for each node */
     private static void createIsoLabels(Graph g){
-        for (SimpleNode n : g.getAllNodes()) {
-            n.setIsoLabel();
+        for (Vertex n : g.getAllVertices()) {
+            n.setNlabel();
         }
     }
 
@@ -86,7 +86,7 @@ public class PathExtractorTest {
 
         File f = new File(fstr);
         Graph g = generateGraph(f,labelOption);
-        Collection<SimpleNode> allNodes = g.getAllNodes();
+        Collection<Vertex> allNodes = g.getAllVertices();
 
         ArrayList<Path> actualPaths;
         ArrayList<String> expectedPathsStr = new ArrayList<>();
@@ -128,7 +128,7 @@ public class PathExtractorTest {
 
         File f = new File(fstr);
         Graph g = generateGraph(f,labelOption);
-        Collection<SimpleNode> allNodes = g.getAllNodes();
+        Collection<Vertex> allNodes = g.getAllVertices();
 
         ArrayList<Path> actualPaths;
         ArrayList<String> expectedPathsStr = new ArrayList<>();
@@ -172,7 +172,7 @@ public class PathExtractorTest {
 
         File f = new File(fstr);
         Graph g = generateGraph(f,labelOption);
-        Collection<SimpleNode> allNodes = g.getAllNodes();
+        Collection<Vertex> allNodes = g.getAllVertices();
 
         ArrayList<Path> actualPaths;
         ArrayList<String> expectedPathsStr = new ArrayList<>();
@@ -223,7 +223,7 @@ public class PathExtractorTest {
 
         File f = new File(fstr);
         Graph g = generateGraph(f,labelOption);
-        Collection<SimpleNode> allNodes = g.getAllNodes();
+        Collection<Vertex> allNodes = g.getAllVertices();
 
         ArrayList<Path> actualPaths;
         ArrayList<String> expectedPathsStr = new ArrayList<>();
